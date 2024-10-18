@@ -34,7 +34,7 @@ class CopyToJSONTest {
                     references = emptyList(),
                     lang = SurveyLang.EN.code,
                     errors = listOf(
-                        BindingErrors.ScriptError(
+                        InstructionError.ScriptError(
                            message = "parse error",
                             start = 0,
                             end = 10

@@ -13,9 +13,9 @@ import com.qlarr.expressionmanager.model.adapters.InstructionSerializer
 @JsonSerialize(using = InstructionSerializer::class)
 sealed class Instruction(
     open val code: String,
-    open val errors: List<BindingErrors>
+    open val errors: List<InstructionError>
 ) {
-    abstract fun addError(error: BindingErrors): Instruction
+    abstract fun addError(error: InstructionError): Instruction
     fun noErrors() = errors.isEmpty()
     abstract fun clearErrors(): Instruction
 
@@ -24,7 +24,7 @@ sealed class Instruction(
         override val code: String,
         val references: List<String>,
         val lang: String,
-        override val errors: List<BindingErrors> = listOf()
+        override val errors: List<InstructionError> = listOf()
     ) : Instruction(code, errors) {
         init {
             if (!code.matches(Regex(VALID_REFERENCE_INSTRUCTION_PATTERN))) {
@@ -44,27 +44,27 @@ sealed class Instruction(
 
         fun runnableInstruction() = RunnableInstruction(code, text(), ReturnType.QlarrMap, true, errors)
 
-        override fun addError(error: BindingErrors) = copy(errors = errors.toMutableList().apply { add(error) })
+        override fun addError(error: InstructionError) = copy(errors = errors.toMutableList().apply { add(error) })
         override fun clearErrors() = copy(errors = emptyList())
     }
 
 
     data class RandomGroups(
         val groups: List<RandomGroup> = listOf(),
-        override val errors: List<BindingErrors> = listOf()
+        override val errors: List<InstructionError> = listOf()
     ) : Instruction(RANDOM_GROUP, errors) {
 
         constructor(groups: List<List<String>>) : this(groups.map { RandomGroup(it) })
 
-        override fun addError(error: BindingErrors) = copy(errors = errors.toMutableList().apply { add(error) })
+        override fun addError(error: InstructionError) = copy(errors = errors.toMutableList().apply { add(error) })
         override fun clearErrors() = copy(errors = emptyList())
     }
 
     data class PriorityGroups(
         val priorities: List<PriorityGroup> = listOf(),
-        override val errors: List<BindingErrors> = listOf()
+        override val errors: List<InstructionError> = listOf()
     ) : Instruction(PRIORITY_GROUPS, errors) {
-        override fun addError(error: BindingErrors) = copy(errors = errors.toMutableList().apply { add(error) })
+        override fun addError(error: InstructionError) = copy(errors = errors.toMutableList().apply { add(error) })
         override fun clearErrors() = copy(errors = emptyList())
     }
 
@@ -92,9 +92,9 @@ sealed class Instruction(
 
     data class ParentRelevance(
         val children: List<List<String>> = listOf(),
-        override val errors: List<BindingErrors> = listOf()
+        override val errors: List<InstructionError> = listOf()
     ) : Instruction(PARENT_RELEVANCE, errors) {
-        override fun addError(error: BindingErrors) = copy(errors = errors.toMutableList().apply { add(error) })
+        override fun addError(error: InstructionError) = copy(errors = errors.toMutableList().apply { add(error) })
         override fun clearErrors() = copy(errors = emptyList())
     }
 
@@ -103,7 +103,7 @@ sealed class Instruction(
         open val reservedCode: ReservedCode,
         open val returnType: ReturnType = reservedCode.defaultReturnType(),
         open val isActive: Boolean = reservedCode.defaultIsActive(),
-        override val errors: List<BindingErrors> = listOf()
+        override val errors: List<InstructionError> = listOf()
     ) : Instruction(reservedCode.code, errors) {
         fun validate() {
             if (reservedCode != ReservedCode.Value && returnType != reservedCode.defaultReturnType()) {
@@ -123,7 +123,7 @@ sealed class Instruction(
         override val reservedCode: ReservedCode,
         override val returnType: ReturnType = reservedCode.defaultReturnType(),
         override val isActive: Boolean = reservedCode.defaultIsActive(),
-        override val errors: List<BindingErrors> = listOf()
+        override val errors: List<InstructionError> = listOf()
     ) : State(reservedCode = reservedCode, text = text) {
         init {
             validate()
@@ -136,7 +136,7 @@ sealed class Instruction(
         )
 
 
-        override fun addError(error: BindingErrors) = copy(errors = errors.toMutableList().apply { add(error) })
+        override fun addError(error: InstructionError) = copy(errors = errors.toMutableList().apply { add(error) })
         override fun clearErrors() = copy(errors = emptyList())
         fun duplicate() = copy()
     }
@@ -149,7 +149,7 @@ sealed class Instruction(
         override val text: String = condition,
         override val reservedCode: ReservedCode = ReservedCode.Skip(code),
         override val isActive: Boolean = reservedCode.defaultIsActive(),
-        override val errors: List<BindingErrors> = listOf()
+        override val errors: List<InstructionError> = listOf()
     ) : State(reservedCode = reservedCode, text = condition, returnType = ReturnType.QlarrBoolean) {
         init {
             validate()
@@ -165,7 +165,7 @@ sealed class Instruction(
         )
 
 
-        override fun addError(error: BindingErrors) = copy(errors = errors.toMutableList().apply { add(error) })
+        override fun addError(error: InstructionError) = copy(errors = errors.toMutableList().apply { add(error) })
         override fun clearErrors() = copy(errors = emptyList())
         fun duplicate() = copy()
     }
@@ -175,7 +175,7 @@ sealed class Instruction(
         val text: String,
         val returnType: ReturnType,
         val isActive: Boolean,
-        val errors: List<BindingErrors>
+        val errors: List<InstructionError>
     )
 
 

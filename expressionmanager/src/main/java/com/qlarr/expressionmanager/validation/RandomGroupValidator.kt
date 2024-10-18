@@ -1,7 +1,7 @@
 package com.qlarr.expressionmanager.validation
 
 import com.qlarr.expressionmanager.ext.getDuplicates
-import com.qlarr.expressionmanager.model.BindingErrors
+import com.qlarr.expressionmanager.model.InstructionError
 import com.qlarr.expressionmanager.model.GroupType
 import com.qlarr.expressionmanager.model.Instruction.*
 import com.qlarr.expressionmanager.model.Survey
@@ -26,7 +26,7 @@ internal fun SurveyComponent.validateRandomGroupInstruction(): SurveyComponent {
                 }
             }
             if (duplicates.isNotEmpty()) {
-                newInstruction = newInstruction.addError(BindingErrors.DuplicateRandomGroupItems(duplicates.toList()))
+                newInstruction = newInstruction.addError(InstructionError.DuplicateRandomGroupItems(duplicates.toList()))
             }
             if (itemsNotChildren.isNotEmpty()) {
                 // if all the children are removed... we remove this random group altogether
@@ -37,12 +37,12 @@ internal fun SurveyComponent.validateRandomGroupInstruction(): SurveyComponent {
                 newInstruction =
                     newInstruction.copy(groups = instruction.groups.filter { !excludedGroups.contains(it) })
                 if (newItemsNotChildren.isNotEmpty()) {
-                    newInstruction = newInstruction.addError(BindingErrors.RandomGroupItemNotChild(newItemsNotChildren))
+                    newInstruction = newInstruction.addError(InstructionError.RandomGroupItemNotChild(newItemsNotChildren))
                 }
             }
 
             if (invalidGroupItems.isNotEmpty()) {
-                newInstruction = newInstruction.addError(BindingErrors.InvalidRandomItem(invalidGroupItems))
+                newInstruction = newInstruction.addError(InstructionError.InvalidRandomItem(invalidGroupItems))
             }
 
             newInstructions[index] = newInstruction
@@ -72,10 +72,10 @@ internal fun SurveyComponent.validatePriorityGroupInstruction(): SurveyComponent
                 }
             }
             if (instruction.priorities.any { it.limit >= it.weights.size || it.limit == 0 }) {
-                newInstruction = newInstruction.addError(BindingErrors.PriorityLimitMismatch)
+                newInstruction = newInstruction.addError(InstructionError.PriorityLimitMismatch)
             }
             if (duplicates.isNotEmpty()) {
-                newInstruction = newInstruction.addError(BindingErrors.DuplicatePriorityGroupItems(duplicates.toList()))
+                newInstruction = newInstruction.addError(InstructionError.DuplicatePriorityGroupItems(duplicates.toList()))
             }
             if (itemsNotChildren.isNotEmpty()) {
                 // if all the children are removed... we remove this priority group altogether
@@ -88,11 +88,11 @@ internal fun SurveyComponent.validatePriorityGroupInstruction(): SurveyComponent
                     newInstruction.copy(priorities = instruction.priorities.filter { !excludedGroups.contains(it) })
                 if (newItemsNotChildren.isNotEmpty()) {
                     newInstruction =
-                        newInstruction.addError(BindingErrors.PriorityGroupItemNotChild(newItemsNotChildren))
+                        newInstruction.addError(InstructionError.PriorityGroupItemNotChild(newItemsNotChildren))
                 }
             }
             if (invalidGroupItems.isNotEmpty()) {
-                newInstruction = newInstruction.addError(BindingErrors.InvalidPriorityItem(invalidGroupItems))
+                newInstruction = newInstruction.addError(InstructionError.InvalidPriorityItem(invalidGroupItems))
             }
             newInstructions[index] = newInstruction
         }

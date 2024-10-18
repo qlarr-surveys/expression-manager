@@ -2,7 +2,7 @@ package com.qlarr.expressionmanager.dependency
 
 import com.qlarr.expressionmanager.context.addErrorToInstruction
 import com.qlarr.expressionmanager.model.*
-import com.qlarr.expressionmanager.model.BindingErrors.ForwardDependency
+import com.qlarr.expressionmanager.model.InstructionError.ForwardDependency
 
 internal class ForwardDependencyAnalyzer(
     private val components: MutableList<SurveyComponent>,
@@ -85,13 +85,13 @@ internal class ForwardDependencyAnalyzer(
                         returnComponent =
                             returnComponent.addErrorToInstruction(
                                 instruction,
-                                BindingErrors.InvalidSkipReference(instruction.skipToComponent)
+                                InstructionError.InvalidSkipReference(instruction.skipToComponent)
                             )
                     } else if (instruction.skipToComponent == endGroupCode && instruction.toEnd) {
                         returnComponent =
                             returnComponent.addErrorToInstruction(
                                 instruction,
-                                BindingErrors.SkipToEndOfEndGroup
+                                InstructionError.SkipToEndOfEndGroup
                             )
                     }
                 }

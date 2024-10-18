@@ -20,7 +20,7 @@ sealed class ReservedCode(
     val isRuntime: Boolean = true,
     val requiresValidation: Boolean = false,
 ) {
-    object Lang :
+    data object Lang :
         ReservedCode(
             "lang",
             executionOrder = 1,
@@ -29,7 +29,7 @@ sealed class ReservedCode(
             isRuntime = false
         )
 
-    object Mode :
+    data object Mode :
         ReservedCode(
             "mode",
             executionOrder = 1,
@@ -38,49 +38,49 @@ sealed class ReservedCode(
             isRuntime = false
         )
 
-    object Prioritised : ReservedCode("prioritised", executionOrder = 1)
+    data object Prioritised : ReservedCode("prioritised", executionOrder = 1)
 
-    object NotSkipped : ReservedCode("not_skipped", executionOrder = 1)
+    data object NotSkipped : ReservedCode("not_skipped", executionOrder = 1)
 
-    object ConditionalRelevance : ReservedCode("conditional_relevance", executionOrder = 1, requiresValidation = true)
+    data object ConditionalRelevance : ReservedCode("conditional_relevance", executionOrder = 1, requiresValidation = true)
 
-    object ChildrenRelevance : ReservedCode("children_relevance", executionOrder = 1, requiresValidation = true)
+    data object ChildrenRelevance : ReservedCode("children_relevance", executionOrder = 1, requiresValidation = true)
 
-    object Relevance : ReservedCode("relevance", executionOrder = 2, true)
+    data object Relevance : ReservedCode("relevance", executionOrder = 2, true)
 
-    object Value : ReservedCode("value", executionOrder = 3, true, true, requiresValidation = true)
+    data object Value : ReservedCode("value", executionOrder = 3, true, true, requiresValidation = true)
 
     data class ValidationRule(override val code: String) : ReservedCode(code, executionOrder = 5, requiresValidation = true)
 
-    object Validity : ReservedCode("validity", executionOrder = 6, true)
+    data object Validity : ReservedCode("validity", executionOrder = 6, true)
 
     data class Skip(override val code: String) : ReservedCode(code, executionOrder = 7, true)
 
-    object MaskedValue : ReservedCode("masked_value", isAccessible = true, requiresValidation = true)
+    data object MaskedValue : ReservedCode("masked_value", isAccessible = true, requiresValidation = true)
 
-    object RelevanceMap : ReservedCode("relevance_map", executionOrder = 8)
+    data object RelevanceMap : ReservedCode("relevance_map", executionOrder = 8)
 
-    object ValidityMap : ReservedCode("validity_map", executionOrder = 8)
+    data object ValidityMap : ReservedCode("validity_map", executionOrder = 8)
 
-    object BeforeNavigation : ReservedCode("before_navigation", executionOrder = 8)
+    data object BeforeNavigation : ReservedCode("before_navigation", executionOrder = 8)
 
-    object AfterNavigation : ReservedCode("after_navigation", executionOrder = 8)
+    data object AfterNavigation : ReservedCode("after_navigation", executionOrder = 8)
 
-    object Order : ReservedCode("order", isAccessible = true, isRuntime = false, requiresValidation = true)
+    data object Order : ReservedCode("order", isAccessible = true,  requiresValidation = true)
 
-    object Priority : ReservedCode("priority", isAccessible = true, isRuntime = false)
+    data object Priority : ReservedCode("priority", isAccessible = true, isRuntime = false)
 
-    object ShowErrors : ReservedCode("show_errors", isRuntime = false)
+    data object ShowErrors : ReservedCode("show_errors", isRuntime = false)
 
-    object HasPrevious : ReservedCode("has_previous")
+    data object HasPrevious : ReservedCode("has_previous")
 
-    object HasNext : ReservedCode("has_next")
+    data object HasNext : ReservedCode("has_next")
 
-    object Meta : ReservedCode("meta", isRuntime = false)
+    data object Meta : ReservedCode("meta", isRuntime = false)
 
-    object Label : ReservedCode("label", isRuntime = false, isAccessible = true, accessibleByChildren = true)
+    data object Label : ReservedCode("label", isRuntime = false, isAccessible = true, accessibleByChildren = true)
 
-    object InCurrentNavigation : ReservedCode("in_current_navigation", isRuntime = false, isAccessible = true)
+    data object InCurrentNavigation : ReservedCode("in_current_navigation", isRuntime = false, isAccessible = true)
 
     fun defaultReturnType(): ReturnType {
         return when (this) {

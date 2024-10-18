@@ -22,10 +22,10 @@ class ScriptEngineValidation {
 
     init {
         val classLoader = javaClass.classLoader
-        val script = classLoader.getResourceAsStream("my-library.min.js")!!.reader().readText()
+        val script = classLoader.getResourceAsStream("expression-manager-script.min.js")!!.reader().readText()
         compiledScript = (engine as Compilable).compile("$script;" +
-                "const QlarrScript = typeof globalThis !== 'undefined' ? globalThis.QlarrScript : this.QlarrScript;" +
-                "QlarrScript.validateCode(instructionList);")
+                "const EMScript = typeof globalThis !== 'undefined' ? globalThis.EMScript : this.EMScript;" +
+                "EMScript.validateCode(instructionList);")
     }
 
     companion object {

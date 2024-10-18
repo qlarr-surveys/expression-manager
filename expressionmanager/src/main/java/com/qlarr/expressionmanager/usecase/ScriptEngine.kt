@@ -1,6 +1,6 @@
 package com.qlarr.expressionmanager.usecase
 
-import com.qlarr.expressionmanager.model.BindingErrors
+import com.qlarr.expressionmanager.model.InstructionError
 import com.qlarr.expressionmanager.model.ComponentInstruction
 
 interface ScriptEngineValidate {
@@ -26,7 +26,7 @@ data class ValidationScriptError(
     val start: Int,
     val end: Int
 ){
-    fun toBindingError() = BindingErrors.ScriptError(
+    fun toBindingError() = InstructionError.ScriptError(
         message, start, end
     )
 }

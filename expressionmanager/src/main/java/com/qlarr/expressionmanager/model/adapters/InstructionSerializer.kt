@@ -86,7 +86,7 @@ class InstructionDeserializer : StdDeserializer<Instruction>(Instruction::class.
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Instruction {
         val node: JsonNode = p.codec.readTree(p)
         var code = ""
-        var errors: List<BindingErrors> = listOf()
+        var errors: List<InstructionError> = listOf()
         var groups: List<RandomGroup> = listOf()
         var references: List<String> = listOf()
         var priorities: List<PriorityGroup> = listOf()

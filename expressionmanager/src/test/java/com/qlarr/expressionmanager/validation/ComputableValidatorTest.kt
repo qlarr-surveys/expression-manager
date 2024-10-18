@@ -36,7 +36,7 @@ class ComponentValidatorTest {
             validated_ok.children.map { it.errors }.flatten()
         )
         assertEquals(
-            BindingErrors.InvalidInstructionInEndGroup,
+            InstructionError.InvalidInstructionInEndGroup,
             validated_ok.children[3].children[0].children[0].instructionList[0].errors[0]
         )
         val validated_not_ok = listOf(survey_not_ok).validateSpecialTypeGroups()[0]
@@ -69,9 +69,9 @@ class ComponentValidatorTest {
 
         val components = listOf(QUESTION_ONE)
         val validated = components.map { it.validateInstructions() }
-        assertEquals(BindingErrors.DuplicateRandomGroupItems(listOf("A4")), validated[0].instructionList[0].errors[0])
+        assertEquals(InstructionError.DuplicateRandomGroupItems(listOf("A4")), validated[0].instructionList[0].errors[0])
         assertEquals(
-            BindingErrors.RandomGroupItemNotChild(listOf("A8", "A9")),
+            InstructionError.RandomGroupItemNotChild(listOf("A8", "A9")),
             validated[0].instructionList[0].errors[1]
         )
     }
@@ -103,7 +103,7 @@ class ComponentValidatorTest {
 
         val components = listOf(SURVEY)
         val validated = components.map { it.validateInstructions() }
-        assertEquals(BindingErrors.InvalidRandomItem    (listOf("G7")), validated[0].instructionList[1].errors[0])
+        assertEquals(InstructionError.InvalidRandomItem    (listOf("G7")), validated[0].instructionList[1].errors[0])
     }
     @Test
     fun `Priority Group Equations are validated`() {
@@ -131,9 +131,9 @@ class ComponentValidatorTest {
 
         val components = listOf(QUESTION_ONE)
         val validated = components.map { it.validateInstructions() }
-        assertEquals(BindingErrors.DuplicatePriorityGroupItems(listOf("A4")), validated[0].instructionList[0].errors[0])
+        assertEquals(InstructionError.DuplicatePriorityGroupItems(listOf("A4")), validated[0].instructionList[0].errors[0])
         assertEquals(
-            BindingErrors.PriorityGroupItemNotChild(listOf("A8", "A9")),
+            InstructionError.PriorityGroupItemNotChild(listOf("A8", "A9")),
             validated[0].instructionList[0].errors[1]
         )
     }
@@ -157,6 +157,6 @@ class ComponentValidatorTest {
 
         val components = listOf(QUESTION_ONE)
         val validated = components.map { it.validateInstructions() }
-        assertEquals(BindingErrors.InvalidChildReferences(listOf("A9")), validated[0].instructionList[0].errors[0])
+        assertEquals(InstructionError.InvalidChildReferences(listOf("A9")), validated[0].instructionList[0].errors[0])
     }
 }

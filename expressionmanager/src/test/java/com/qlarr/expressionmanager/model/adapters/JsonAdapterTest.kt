@@ -3,7 +3,7 @@ package com.qlarr.expressionmanager.model.adapters
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.qlarr.expressionmanager.model.*
-import com.qlarr.expressionmanager.model.BindingErrors.ScriptError
+import com.qlarr.expressionmanager.model.InstructionError.ScriptError
 import com.qlarr.expressionmanager.model.Instruction.*
 import com.qlarr.expressionmanager.model.ReservedCode.*
 import com.qlarr.expressionmanager.usecase.ValidationJsonOutput
@@ -87,15 +87,15 @@ class JsonAdapterTest {
 
     private val COMPONENT_List_TEXT = "[$G3_TEXT]"
 
-    private val RG_DUPLICATE = BindingErrors.DuplicateRandomGroupItems(listOf())
+    private val RG_DUPLICATE = InstructionError.DuplicateRandomGroupItems(listOf())
     private val RG_DUPLICATE_TXT = "{\"items\":[],\"name\":\"DuplicateRandomGroupItems\"}"
-    private val RG_NOT_CHILD = BindingErrors.RandomGroupItemNotChild(listOf("A1", "A2"))
+    private val RG_NOT_CHILD = InstructionError.RandomGroupItemNotChild(listOf("A1", "A2"))
     private val RG_NOT_CHILD_TXT = "{\"items\":[\"A1\",\"A2\"],\"name\":\"RandomGroupItemNotChild\"}"
 
     private val SCRIPT_FAILURE_ERR = ScriptError(message = "error message", start = 5, end = 120)
     private val SCRIPT_FAILURE_ERR_TEXT =
         "{\"message\":\"error message\",\"start\":5,\"end\":120,\"name\":\"ScriptError\"}"
-    private val FWD_DEPENDENCY_ERR = BindingErrors.ForwardDependency(Dependency("G1Q1", Value))
+    private val FWD_DEPENDENCY_ERR = InstructionError.ForwardDependency(Dependency("G1Q1", Value))
     private val FWD_DEPENDENCY_ERR_TEXT =
         "{\"dependency\":{\"componentCode\":\"G1Q1\",\"reservedCode\":\"value\"},\"name\":\"ForwardDependency\"}"
     private val List_ERR = listOf(SCRIPT_FAILURE_ERR, FWD_DEPENDENCY_ERR)
@@ -177,13 +177,13 @@ class JsonAdapterTest {
         assertEquals(FWD_DEPENDENCY_ERR_TEXT, jacksonKtMapper.writeValueAsString(FWD_DEPENDENCY_ERR))
         assertEquals(
             FWD_DEPENDENCY_ERR,
-            jacksonKtMapper.readValue(FWD_DEPENDENCY_ERR_TEXT, jacksonTypeRef<BindingErrors>())
+            jacksonKtMapper.readValue(FWD_DEPENDENCY_ERR_TEXT, jacksonTypeRef<InstructionError>())
         )
 
         assertEquals(List_ERR_TEXT, jacksonKtMapper.writeValueAsString(List_ERR))
-        assertEquals(List_ERR, jacksonKtMapper.readValue(List_ERR_TEXT, jacksonTypeRef<List<BindingErrors>>()))
+        assertEquals(List_ERR, jacksonKtMapper.readValue(List_ERR_TEXT, jacksonTypeRef<List<InstructionError>>()))
 
-        assertEquals(List_ERR_1, jacksonKtMapper.readValue(List_ERR_1_TEXT, jacksonTypeRef<List<BindingErrors>>()))
+        assertEquals(List_ERR_1, jacksonKtMapper.readValue(List_ERR_1_TEXT, jacksonTypeRef<List<InstructionError>>()))
         assertEquals(List_ERR_1_TEXT, jacksonKtMapper.writeValueAsString(List_ERR_1))
     }
 

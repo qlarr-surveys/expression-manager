@@ -16,7 +16,7 @@ class EmUseCaseTest {
         ).wrapToSurvey()
         val survey = ValidationUseCaseImpl(buildScriptEngine(), questionComponent).validate(false).survey
 
-        assert(survey.groups[0].questions[0].instructionList[0].errors[0] is BindingErrors.ScriptError)
+        assert(survey.groups[0].questions[0].instructionList[0].errors[0] is InstructionError.ScriptError)
     }
 
     @Test
@@ -32,7 +32,7 @@ class EmUseCaseTest {
         val component = Group("G1", questions = listOf(questionComponent1, questionComponent2)).wrapToSurvey()
         val survey = ValidationUseCaseImpl(buildScriptEngine(), component).validate(false).survey
         assertEquals(
-            BindingErrors.ForwardDependency(
+            InstructionError.ForwardDependency(
                 Dependency("Q2", ReservedCode.Value)
             ), survey.groups[0].questions[0].instructionList[0].errors[0]
         )

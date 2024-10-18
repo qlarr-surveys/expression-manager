@@ -60,18 +60,18 @@ private fun SurveyComponent.validateReferenceInstructions(sanitizedNestedCompone
                 val componentCode = if (codes.isNotEmpty()) codes[0] else ""
                 val referencedComponent = sanitizedNestedComponents.firstOrNull { it.code == componentCode }
                 if (referencedComponent == null) {
-                    newInstruction = newInstruction.addError(BindingErrors.InvalidReference(dependency, true))
+                    newInstruction = newInstruction.addError(InstructionError.InvalidReference(dependency, true))
                 } else {
                     val reservedCode = if (codes.size >= 2) codes[1] else ""
                     if (!reservedCode.isReservedCode()) {
-                        newInstruction = newInstruction.addError(BindingErrors.InvalidReference(dependency, false))
+                        newInstruction = newInstruction.addError(InstructionError.InvalidReference(dependency, false))
                     } else {
                         val referencedInstruction = referencedComponent
                                 .instructionList
                                 .filterIsInstance<Instruction.State>()
                                 .firstOrNull { it.reservedCode == reservedCode.toReservedCode() }
                         if (referencedInstruction == null) {
-                            newInstruction = newInstruction.addError(BindingErrors.InvalidReference(dependency, false))
+                            newInstruction = newInstruction.addError(InstructionError.InvalidReference(dependency, false))
                         }
                     }
                 }
@@ -88,7 +88,7 @@ private fun SurveyComponent.addInstructionDuplicateCodes(): SurveyComponent {
     instructionList.forEachIndexed { index, instruction ->
         if (instructionList.count { it.code == instruction.code } > 1
                 && instructionList.indexOfFirst { it.code == instruction.code } != index) {
-            newInstructions[index] = instruction.addError(BindingErrors.DuplicateInstructionCode)
+            newInstructions[index] = instruction.addError(InstructionError.DuplicateInstructionCode)
         }
     }
     return duplicate(instructionList = newInstructions)
@@ -104,7 +104,7 @@ private fun SurveyComponent.validateParentRelevanceInstruction(): SurveyComponen
                         children.all { it.code != code }
                     }.let {
                         if (it.isNotEmpty()) {
-                            newInstructions[index] = instruction.addError(BindingErrors.InvalidChildReferences(it))
+                            newInstructions[index] = instruction.addError(InstructionError.InvalidChildReferences(it))
                         }
                     }
         }
@@ -192,7 +192,7 @@ internal fun SurveyComponent.validateNoValueInEndGroup(): SurveyComponent {
         instructionList.filterIsInstance<Instruction.SimpleState>().filter {
             it.reservedCode in listOf(ReservedCode.ConditionalRelevance)
         }.forEach {
-            newInstructions[newInstructions.indexOf(it)] = it.addError(BindingErrors.InvalidInstructionInEndGroup)
+            newInstructions[newInstructions.indexOf(it)] = it.addError(InstructionError.InvalidInstructionInEndGroup)
         }
     }
     instructionList
@@ -203,7 +203,7 @@ internal fun SurveyComponent.validateNoValueInEndGroup(): SurveyComponent {
 //                || it.reservedCode == ReservedCode.Validity
             }
             ?.let {
-                newInstructions[newInstructions.indexOf(it)] = it.addError(BindingErrors.InvalidInstructionInEndGroup)
+                newInstructions[newInstructions.indexOf(it)] = it.addError(InstructionError.InvalidInstructionInEndGroup)
             }
     val newChildren = children.map { it.validateNoValueInEndGroup() }
 

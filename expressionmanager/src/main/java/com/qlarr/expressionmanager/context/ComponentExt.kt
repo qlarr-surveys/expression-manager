@@ -127,7 +127,7 @@ fun SurveyComponent.insertOrOverrideState(
 
 fun SurveyComponent.addErrorToInstruction(
     instruction: Instruction,
-    error: BindingErrors
+    error: InstructionError
 ): SurveyComponent {
     val newInstructionList = instructionList.toMutableList()
     val newInstruction = instruction.addError(error)

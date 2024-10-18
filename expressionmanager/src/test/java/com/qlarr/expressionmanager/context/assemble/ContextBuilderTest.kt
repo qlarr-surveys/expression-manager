@@ -32,9 +32,9 @@ class ContextBuilderTest {
         )
         val contextManager = ContextBuilder(mutableListOf(SURVEY_TITLE_INVALID_SCRIPT), buildScriptEngine())
         contextManager.validate()
-        assertTrue(contextManager.components[0].instructionList[0].errors[0] is BindingErrors.ScriptError)
+        assertTrue(contextManager.components[0].instructionList[0].errors[0] is InstructionError.ScriptError)
         assertEquals(
-            BindingErrors.InvalidReference("G1.kabaka", false),
+            InstructionError.InvalidReference("G1.kabaka", false),
             contextManager.components[0].children[1].instructionList[0].errors[0]
         )
 
@@ -59,9 +59,9 @@ class ContextBuilderTest {
         )
         val contextManager = ContextBuilder(mutableListOf(SURVEY_TITLE_INVALID_SCRIPT), buildScriptEngine())
         contextManager.validate()
-        assertTrue(contextManager.components[0].instructionList[0].errors[0] is BindingErrors.ScriptError)
+        assertTrue(contextManager.components[0].instructionList[0].errors[0] is InstructionError.ScriptError)
         assertEquals(
-            BindingErrors.InvalidReference("G1.kabaka", true),
+            InstructionError.InvalidReference("G1.kabaka", true),
             contextManager.components[0].children[1].instructionList[0].errors[0]
         )
 
@@ -87,21 +87,21 @@ class ContextBuilderTest {
         )
         val contextManager = ContextBuilder(mutableListOf(SURVEY_TITLE_INVALID_SCRIPT), buildScriptEngine())
         contextManager.validate()
-        assertTrue(contextManager.components[0].instructionList[0].errors[0] is BindingErrors.ScriptError)
+        assertTrue(contextManager.components[0].instructionList[0].errors[0] is InstructionError.ScriptError)
         assertEquals(
-            BindingErrors.InvalidReference("Q1Afirst_name.validity", true),
+            InstructionError.InvalidReference("Q1Afirst_name.validity", true),
             contextManager.components[0].instructionList[1].errors[0]
         )
         assertEquals(
-            BindingErrors.InvalidReference("Q1Alast_name.validity", true),
+            InstructionError.InvalidReference("Q1Alast_name.validity", true),
             contextManager.components[0].instructionList[1].errors[1]
         )
         assertEquals(
-            BindingErrors.InvalidReference("Q1Alast_name.value", true),
+            InstructionError.InvalidReference("Q1Alast_name.value", true),
             contextManager.components[0].instructionList[1].errors[2]
         )
         assertEquals(
-            BindingErrors.InvalidReference("Q1Afirst_name.value", true),
+            InstructionError.InvalidReference("Q1Afirst_name.value", true),
             contextManager.components[0].instructionList[1].errors[3]
         )
 
@@ -149,11 +149,11 @@ class ContextBuilderTest {
         contextManager.validate()
 
         assertEquals(
-            BindingErrors.InvalidSkipReference("Q7"),
+            InstructionError.InvalidSkipReference("Q7"),
             contextManager.components[0].children[0].children[2].instructionList[0].errors[0]
         )
         assertEquals(
-            BindingErrors.SkipToEndOfEndGroup,
+            InstructionError.SkipToEndOfEndGroup,
             contextManager.components[0].children[0].children[3].instructionList[0].errors[0]
         )
         contextManager.components
@@ -180,7 +180,7 @@ class ContextBuilderTest {
         val contextManager = ContextBuilder(mutableListOf(G1.wrapToSurvey()), buildScriptEngine())
         contextManager.validate()
 
-        assertTrue(contextManager.components[0].children[0].children[0].instructionList[0].errors[0] is BindingErrors.ForwardDependency)
+        assertTrue(contextManager.components[0].children[0].children[0].instructionList[0].errors[0] is InstructionError.ForwardDependency)
         assertTrue(contextManager.components[0].children[0].children[1].instructionList[0].errors.isEmpty())
     }
 
@@ -196,7 +196,7 @@ class ContextBuilderTest {
         val G1 = Group("G1", questions = listOf(Q1))
         val contextManager = ContextBuilder(mutableListOf(G1.wrapToSurvey()), buildScriptEngine())
         contextManager.validate()
-        assertTrue(contextManager.components[0].children[0].children[0].children[0].instructionList[0].errors[0] is BindingErrors.ForwardDependency)
+        assertTrue(contextManager.components[0].children[0].children[0].children[0].instructionList[0].errors[0] is InstructionError.ForwardDependency)
 
     }
 
@@ -282,7 +282,7 @@ class ContextBuilderTest {
             .map { skipInstruction ->
                 Pair(
                     skipInstruction.code,
-                    skipInstruction.errors.any { it is BindingErrors.InvalidSkipReference })
+                    skipInstruction.errors.any { it is InstructionError.InvalidSkipReference })
             }
         assertEquals(
             listOf(
