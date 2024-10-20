@@ -66,24 +66,24 @@ Expression Manager exposes 2 usecases
 Validates the survey structure, indexes the components, maps dependencies between components and generates the survey run time file
 - **Input**: Survey design file
 - **Output**:
-  - Survey design, validated
-  - Impact Map, which variables depend on a given variable, used in UI to update dynamic state
-  - Schema, to define the columns that needs to be saved in the database to save a user response
-  - script, survey run time file in javascript, used by UI to update dynamic state
-  - componentIndexList: maps the order of each component, relative to its siblings, used to validate a component variables' scope (that a component can only access components that come before it in a survey)
+  - **Survey design**, validated
+  - **Impact Map**, which variables depend on a given variable, used in UI to update dynamic state
+  - **Schema**, to define the columns that needs to be saved in the database to save a user response
+  - **script**, survey run time file in javascript, used by UI to update dynamic state
+  - **componentIndexList**: maps the order of each component, relative to its siblings, used to validate a component variables' scope (that a component can only access components that come before it in a survey)
 
 ### 2. Navigate
-- The Expression Manager processes user navigation requests and emits the next survey state, ensuring a smooth and dynamic flow throughout the survey.
+The Expression Manager processes user navigation requests and emits the next survey state, ensuring a smooth and dynamic flow throughout the survey.
 - **Input**:
-  - Processed Survey: output from process use case
-  - Survey values: values from survey that were saved to the DB
-  - Navigation Info: Current user naviation index (place in the survey) and the navigation direction (start, next, previous, jump, resume or submit)
-  - Navigation Mode: required mode of navigation (all-in-one- page-by-page, or question-by-question)
-  - Survey Lang: the required language of the survey
-  - skip invalid: whether validation should be inforced during submission or during each navigation step (next, jumpr and submit)
-  - Survey Mode: whether the survey is running online (on web) or offline (in app)
+  - **Processed Survey**: output from process use case
+  - **Survey values**: values from survey that were saved to the DB
+  - **Navigation Info**: Current user naviation index (place in the survey) and the navigation direction (start, next, previous, jump, resume or submit)
+  - **Navigation Mode**: required mode of navigation (all-in-one- page-by-page, or question-by-question)
+  - **Survey Lang**: the required language of the survey
+  - **skip invalid**: whether validation should be inforced during submission or during each navigation step (next, jumpr and submit)
+  - **Survey Mode**: whether the survey is running online (on web) or offline (in app)
 - **Output**:
-  - survey: survey design, ordered according to randomizaion rules, and reduced to include the required navigation
-  - state: State Machine written in Javascript, used to update the UI on user actions
-  - navigationIndex: new user's location in the survey
-  - toSave: new values to save to the database
+  - **survey**: survey design, ordered according to randomizaion rules, and reduced to include the required navigation
+  - **state**: State Machine written in Javascript, used to update the UI on user actions
+  - **navigationIndex**: new user's location in the survey
+  - **toSave**: new values to save to the database
