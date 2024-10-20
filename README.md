@@ -17,7 +17,7 @@ This is the state that defines how the UI should behave
  - Validity: Which questions has valid input and which are not
  - Conditional Formatting: Dynamically applied styles and formats based on survey logic
 
-<img width="862" alt="Screenshot 2024-10-18 at 22 34 03" src="https://github.com/user-attachments/assets/5096a372-8e70-4898-a491-ec2dac716f41">
+<img width="600" alt="Screenshot 2024-10-18 at 22 34 03" src="https://github.com/user-attachments/assets/5096a372-8e70-4898-a491-ec2dac716f41">
 
 
 ## The Domain-Specific Language (DSL) for Survey Design
@@ -52,7 +52,7 @@ Qlarr provides flexible navigation options, allowing developers to tailor the us
 - **Page-by-Page Navigation**: The survey can be broken into pages, where users progress one page at a time, moving forward or backward between sections.
 - **Question-by-Question Navigation**: Each question can be presented individually, giving users a focused view of one question at a time, with navigation options to move forward or revisit previous questions.
 
-<img width="847" alt="Screenshot 2024-10-18 at 22 28 26" src="https://github.com/user-attachments/assets/b166cda2-d07f-4ecb-adc9-368d5bd7068b">
+<img width="600" alt="Screenshot 2024-10-18 at 22 28 26" src="https://github.com/user-attachments/assets/b166cda2-d07f-4ecb-adc9-368d5bd7068b">
 
 This flexible navigation model ensures that surveys can be adapted to various use cases, from quick overviews to detailed, step-by-step progression. Qlarr supports navigation commands such as starting, moving forward, moving backward, jumping between sections, and resuming a survey where the user left off.
 
@@ -60,14 +60,30 @@ Here’s the section formatted in markdown:
 
 
 ## API
-Expression Manager exposes 2 main public methods
+Expression Manager exposes 2 usecases
 
-### During Survey Design (Back-end)
-- **Survey Design Validation**: The Expression Manager ensures that the survey structure and instructions are correctly designed, checking for completeness, consistency, and logic errors.
-- **State Serialization**: It serializes the entire survey state into a JavaScript state machine (also known as a Dependency Map), which is used to manage the survey state later when the survey is run.
+### 1. Process
+Validates the survey structure, indexes the components, maps dependencies between components and generates the survey run time file
+- **Input**: Survey design file
+- **Output**:
+  - Survey design, validated
+  - Impact Map, which variables depend on a given variable, used in UI to update dynamic state
+  - Schema, to define the columns that needs to be saved in the database to save a user response
+  - script, survey run time file in javascript, used by UI to update dynamic state
+  - componentIndexList: maps the order of each component, relative to its siblings, used to validate a component variables' scope (that a component can only access components that come before it in a survey)
 
-### During Survey Navigation (Back-end)
+### 2. Navigate
 - The Expression Manager processes user navigation requests and emits the next survey state, ensuring a smooth and dynamic flow throughout the survey.
-
-### During Survey Run (Front-end)
-- The state machine delivers the relevant portion of the state to the front-end, allowing it to manage survey state changes, respond to user actions (e.g., showing/hiding components), validate inputs, and more.
+- **Input**:
+  - Processed Survey: output from process use case
+  - Survey values: values from survey that were saved to the DB
+  - Navigation Info: Current user naviation index (place in the survey) and the navigation direction (start, next, previous, jump, resume or submit)
+  - Navigation Mode: required mode of navigation (all-in-one- page-by-page, or question-by-question)
+  - Survey Lang: the required language of the survey
+  - skip invalid: whether validation should be inforced during submission or during each navigation step (next, jumpr and submit)
+  - Survey Mode: whether the survey is running online (on web) or offline (in app)
+- **Output**:
+  - survey: survey design, ordered according to randomizaion rules, and reduced to include the required navigation
+  - state: State Machine written in Javascript, used to update the UI on user actions
+  - navigationIndex: new user's location in the survey
+  - toSave: new values to save to the database
